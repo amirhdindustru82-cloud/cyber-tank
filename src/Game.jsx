@@ -15,6 +15,7 @@ import CityBg from './components/CityBg'
 import HUD from './ui/HUD'
 import MainMenu from './ui/MainMenu'
 import GameOver from './ui/GameOver'
+import TouchControls from './ui/TouchControls'
 import './styles/ui.css'
 
 export default function Game() {
@@ -24,7 +25,7 @@ export default function Game() {
     <div className="game-root">
       <Canvas
         shadows
-        camera={{ position: [0, 9, 11], fov: 55 }}
+        camera={{ position: [0, 7, 8], fov: 60 }}
         gl={{ antialias: true }}
         dpr={[1, 2]}
       >
@@ -63,6 +64,8 @@ export default function Game() {
           <Vignette eskil={false} offset={0.25} darkness={0.85} />
         </EffectComposer>
       </Canvas>
+
+      <TouchControls />
 
       {gameState === 'playing' && <HUD />}
       {gameState === 'menu' && <MainMenu />}
