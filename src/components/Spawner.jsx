@@ -9,12 +9,10 @@ export default function Spawner() {
   const gameState = useGame((s) => s.gameState)
   const score = useGame((s) => s.score)
 
-  // 🎯 لیست جاده‌ها - یک بار ساخته می‌شه و پایدار می‌مونه
   const [roads, setRoads] = useState([])
   const lastSpawnedIndex = useRef(0)
   const playerProgressRef = useRef(0)
 
-  // شروع بازی: جاده‌های اولیه
   useEffect(() => {
     if (gameState !== 'playing') {
       setRoads([])
@@ -23,11 +21,10 @@ export default function Spawner() {
       return
     }
 
-    // ساخت جاده‌های اولیه
     const initial = []
     for (let i = 0; i < VISIBLE_ROADS; i++) {
       initial.push({
-        id: `road-${i}`,          // 🎯 ID ثابت - بدون Date.now
+        id: `road-${i}`,
         index: i,
         z: -(i + 1) * ROAD_DEPTH,
       })
@@ -37,14 +34,11 @@ export default function Spawner() {
     playerProgressRef.current = 0
   }, [gameState])
 
-  // اضافه کردن جاده جدید
   useEffect(() => {
     if (gameState !== 'playing') return
     if (roads.length === 0) return
 
-    // 🎯 فقط وقتی بازیکن جلو رفت، جاده جدید بساز
-    const targetIndex = score  // هر پرش = 1 ایندکس جدید
-
+    const targetIndex = score
     if (targetIndex <= playerProgressRef.current) return
     playerProgressRef.current = targetIndex
 
@@ -58,7 +52,7 @@ export default function Spawner() {
         const newIndex = lastSpawnedIndex.current + 1
         lastSpawnedIndex.current = newIndex
         newRoads.push({
-          id: `road-${newIndex}`,   // 🎯 ID ثابت
+          id: `road-${newIndex}`,
           index: newIndex,
           z: -(newIndex + 1) * ROAD_DEPTH,
         })
@@ -66,6 +60,7 @@ export default function Spawner() {
 
       return [...filtered, ...newRoads]
     })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [score, gameState, roads.length])
 
   const difficulty = Math.min(score / 15, 6)

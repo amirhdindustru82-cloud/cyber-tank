@@ -25,7 +25,7 @@ export default function Game() {
     <div className="game-root">
       <Canvas
         shadows
-        camera={{ position: [0, 7, 8], fov: 60 }}
+      camera={{ position: [0, 11, 14], fov: 55 }}
         gl={{ antialias: true }}
         dpr={[1, 2]}
       >

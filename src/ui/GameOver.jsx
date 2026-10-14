@@ -20,7 +20,7 @@ export default function GameOver() {
         transition={{ type: 'spring', stiffness: 180, damping: 22 }}
       >
         <h1 className="menu-title danger">SPLAT!</h1>
-        <div style={{ fontSize: 60, margin: '10px 0' }}>ðŸš—ðŸ’¥ðŸ”</div>
+
         {isNewRecord && (
           <motion.p
             className="new-record"
@@ -31,10 +31,16 @@ export default function GameOver() {
             NEW RECORD
           </motion.p>
         )}
+
         <p className="menu-sub">Roads Crossed</p>
-        <div className="hud-value neon" style={{ fontSize: 80, margin: '20px 0 32px' }}>
+
+        <div
+          className="hud-value neon"
+          style={{ fontSize: 80, margin: '20px 0 32px' }}
+        >
           {score}
         </div>
+
         <motion.button
           className="btn"
           whileHover={{ scale: 1.05 }}
@@ -43,6 +49,7 @@ export default function GameOver() {
         >
           TRY AGAIN
         </motion.button>
+
         <p className="menu-best">BEST - {highScore}</p>
       </motion.div>
     </motion.div>

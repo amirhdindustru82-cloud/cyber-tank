@@ -26,6 +26,7 @@ export default function TouchControls() {
     window.dispatchEvent(event)
   }
 
+  // Swipe detection
   useEffect(() => {
     if (gameState !== 'playing') return
     if (!isMobile) return
@@ -58,15 +59,10 @@ export default function TouchControls() {
       }
 
       if (absDy > absDx) {
-        if (dy < 0) {
-          simulateKey('Space')
-        }
+        if (dy < 0) simulateKey('Space')
       } else {
-        if (dx > 0) {
-          simulateKey('ArrowRight')
-        } else {
-          simulateKey('ArrowLeft')
-        }
+        if (dx > 0) simulateKey('ArrowRight')
+        else simulateKey('ArrowLeft')
       }
     }
 
@@ -81,36 +77,46 @@ export default function TouchControls() {
   if (!isMobile || gameState !== 'playing') return null
 
   return (
-    <div className="touch-controls">
-      <button
-        className="touch-btn touch-left"
-        onTouchStart={(e) => {
-          e.preventDefault()
-          simulateKey('ArrowLeft')
-        }}
-      >
-        ◀
-      </button>
+    <>
+      {/* 🎯 راهنمای آیکون‌ها - بالای صفحه */}
+      <div className="touch-hint">
+        <div className="hint-btn hint-left">◀</div>
+        <div className="hint-btn hint-up">▲</div>
+        <div className="hint-btn hint-right">▶</div>
+      </div>
 
-      <button
-        className="touch-btn touch-up"
-        onTouchStart={(e) => {
-          e.preventDefault()
-          simulateKey('Space')
-        }}
-      >
-        ▲
-      </button>
+      {/* دکمه‌های پایین - برای راحتی */}
+      <div className="touch-controls">
+        <button
+          className="touch-btn touch-left"
+          onTouchStart={(e) => {
+            e.preventDefault()
+            simulateKey('ArrowLeft')
+          }}
+        >
+          ◀
+        </button>
 
-      <button
-        className="touch-btn touch-right"
-        onTouchStart={(e) => {
-          e.preventDefault()
-          simulateKey('ArrowRight')
-        }}
-      >
-        ▶
-      </button>
-    </div>
+        <button
+          className="touch-btn touch-up"
+          onTouchStart={(e) => {
+            e.preventDefault()
+            simulateKey('Space')
+          }}
+        >
+          ▲
+        </button>
+
+        <button
+          className="touch-btn touch-right"
+          onTouchStart={(e) => {
+            e.preventDefault()
+            simulateKey('ArrowRight')
+          }}
+        >
+          ▶
+        </button>
+      </div>
+    </>
   )
 }
