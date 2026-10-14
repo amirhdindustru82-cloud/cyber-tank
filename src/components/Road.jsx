@@ -5,6 +5,9 @@ import { ROAD_WIDTH, LANE_X } from '../constants'
 const COLORS = ['#ff3366', '#ffdd00', '#00ff88', '#b026ff', '#00fff7']
 
 export default function Road({ z, difficulty, scene }) {
+  // 🎯 isFar رو اینجا تعریف می‌کنیم که هم توی useMemo هم توی JSX قابل استفاده باشه
+  const isFar = Math.abs(z) > 20
+
   const cars = useMemo(() => {
     const result = []
 
@@ -12,10 +15,7 @@ export default function Road({ z, difficulty, scene }) {
     if (Math.abs(z + 3) < 0.5) return []
 
     // 🚀 جاده‌های دور: ساده‌تر (فقط lane وسط)
-    const isFar = Math.abs(z) > 20
-
     if (isFar) {
-      // فقط یه ماشین توی lane وسط
       result.push({
         id: `${z}-far-${Math.random()}`,
         laneX: LANE_X[1],
@@ -44,7 +44,7 @@ export default function Road({ z, difficulty, scene }) {
     })
 
     for (let lane = 0; lane < 3; lane++) {
-      const carsInLane = lane === 1 ? 2 : 2  // 🚀 از 3 به 2 کاهش
+      const carsInLane = 2
 
       const laneDirection = isTwoWay
         ? (Math.random() > 0.5 ? 1 : -1)
@@ -82,6 +82,7 @@ export default function Road({ z, difficulty, scene }) {
     }
 
     return result
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
@@ -97,7 +98,7 @@ export default function Road({ z, difficulty, scene }) {
         />
       </mesh>
 
-      {/* خطوط: ساده‌تر — فقط 2 خط اطراف */}
+      {/* خطوط اطراف — همیشه */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, z - 1.4]}>
         <planeGeometry args={[ROAD_WIDTH, 0.12]} />
         <meshBasicMaterial color="#00fff7" />
