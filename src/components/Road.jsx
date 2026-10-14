@@ -45,7 +45,7 @@ export default function Road({ z, difficulty, scene }) {
     for (let lane = 0; lane < 3; lane++) {
       if (lane === 1) continue
 
-      const shouldFill = Math.random() < 0.85  // 70% احتمال
+      const shouldFill = Math.random() < 0.95  // 70% احتمال
       if (!shouldFill) continue
 
       const laneDirection = isTwoWay
