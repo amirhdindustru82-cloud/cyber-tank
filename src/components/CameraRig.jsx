@@ -14,26 +14,26 @@ export default function CameraRig() {
 
     const p = player.position
 
-    // 🎥 دوربین عقب‌تر و بالاتر — دید وسیع‌تر
-    const baseY = 16
-    const baseZ = 16
+    // 🎥 دوربین متعادل: عقب‌تر و بالاتر ولی نه خیلی
+    const baseY = 11
+    const baseZ = 11
 
-    // 🎬 با پیشرفت بازی، کمی عقب‌تر
-    const zoomOut = Math.min(score / 40, 3)
+    // 🎬 فقط یه ذره با پیشرفت بازی عقب‌تر
+    const zoomOut = Math.min(score / 60, 2)
 
-    // 🔥 مهم: وقتی مرغ چپ/راست می‌ره، دوربین کامل همراهش نمی‌ره
-    // فقط 25% جابجایی رو دنبال می‌کنه (بقیه ثابت می‌مونه)
-    const desiredX = p.x * 0.25
+    // 🔑 کلید حل: دوربین فقط 20% جابجایی مرغ رو دنبال می‌کنه
+    // یعنی مرغ 80% از وسط کادر فاصله نمی‌گیره
+    const desiredX = p.x * 0.2
     const desiredY = baseY + zoomOut
     const desiredZ = p.z + baseZ + zoomOut
 
-    // حرکت نرم‌تر (کندتر)
+    // حرکت نرم
     camera.position.x += (desiredX - camera.position.x) * delta * 3
     camera.position.y += (desiredY - camera.position.y) * delta * 3
     camera.position.z += (desiredZ - camera.position.z) * delta * 3
 
-    // 🎯 نگاه به جلوتر و به سمت مرغ (نه مستقیم روی مرغ)
-    target.current.set(p.x * 0.5, 0.5, p.z - 7)
+    // 🎯 نگاه به جلوتر (نه دقیقاً روی بازیکن)
+    target.current.set(p.x * 0.4, 0.5, p.z - 4)
     camera.lookAt(target.current)
   })
 
