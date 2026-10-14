@@ -37,7 +37,7 @@ export default function Game() {
       <Canvas
         // 🚀 موبایل: بدون shadow، بدون antialias
         shadows={!isMobile}
-        camera={{ position: [0, 11, 11], fov: 55 }}
+       camera={{ position: [0, 12, 13], fov: 60 }}
         gl={{
           antialias: !isMobile,
           powerPreference: 'high-performance',

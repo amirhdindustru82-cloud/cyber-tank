@@ -12,22 +12,19 @@ export default function CameraRig() {
 
     const p = player.position
 
-    // 🎥 دوربین ثابت — بدون وابستگی به score
-    const baseY = 11
-    const baseZ = 11
+    // 🎥 دوربین کمی عقب‌تر و بالاتر برای دیدن عرض بیشتر
+    const baseY = 12
+    const baseZ = 13
 
-    // 🔑 کلید حل: فقط موقعیت بازیکن رو دنبال کن، نه score
     const desiredX = p.x * 0.2
     const desiredY = baseY
     const desiredZ = p.z + baseZ
 
-    // حرکت نرم
     camera.position.x += (desiredX - camera.position.x) * delta * 3
     camera.position.y += (desiredY - camera.position.y) * delta * 3
     camera.position.z += (desiredZ - camera.position.z) * delta * 3
 
-    // 🎯 نگاه به جلوتر
-    target.current.set(p.x * 0.4, 0.5, p.z - 4)
+    target.current.set(p.x * 0.4, 0.5, p.z - 5)
     camera.lookAt(target.current)
   })
 
