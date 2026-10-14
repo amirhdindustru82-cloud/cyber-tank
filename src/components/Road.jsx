@@ -18,7 +18,7 @@ export default function Road({ z, difficulty, scene }) {
       result.push({
         id: `${z}-far-${Math.random()}`,
         laneX: LANE_X[1],
-        speed: 3 + Math.random() * 1.5 + difficulty * 0.2, // 🎯 آروم‌تر
+        speed: 3.5 + Math.random() * 2 + difficulty * 0.3,
         direction: Math.random() > 0.5 ? 1 : -1,
         color: COLORS[Math.floor(Math.random() * COLORS.length)],
         size: { w: 1.7, h: 0.7, d: 2.5 },
@@ -27,23 +27,25 @@ export default function Road({ z, difficulty, scene }) {
       return result
     }
 
-    // جاده‌های نزدیک: کامل
+    // جاده‌های نزدیک
     const isTwoWay = Math.random() > 0.5
 
     // ماشین تضمینی توی lane وسط
     result.push({
       id: `${z}-center-${Math.random()}`,
       laneX: LANE_X[1],
-      speed: 3.5 + Math.random() * 2 + difficulty * 0.3, // 🎯 آروم‌تر
+      speed: 4 + Math.random() * 2.5 + difficulty * 0.4,
       direction: Math.random() > 0.5 ? 1 : -1,
       color: COLORS[Math.floor(Math.random() * COLORS.length)],
       size: { w: 1.7, h: 0.7, d: 2.5 },
-      initialOffset: (Math.random() - 0.5) * 6,
+      initialOffset: (Math.random() - 0.5) * 5,
     })
 
     for (let lane = 0; lane < 3; lane++) {
-      // 🎯 فقط lane چپ و راست 1 ماشین اضافه
       if (lane === 1) continue
+
+      // 🎯 هر lane چپ/راست 2 ماشین (نه 1 نه 3)
+      const carsInLane = 2
 
       const laneDirection = isTwoWay
         ? (Math.random() > 0.5 ? 1 : -1)
@@ -51,30 +53,32 @@ export default function Road({ z, difficulty, scene }) {
           ? 1
           : -1
 
-      // 🎯 سرعت پایه آروم‌تر
-      const baseLaneSpeed = 3.5 + Math.random() * 2 + difficulty * 0.3
+      // 🎯 سرعت متوسط — بین نسخه سخت و آسون
+      const baseLaneSpeed = 4 + Math.random() * 2.5 + difficulty * 0.4
+      const spacing = ROAD_WIDTH / carsInLane
 
-      const sizeVariants = [
-        { w: 1.6, h: 0.6, d: 2.2 },
-        { w: 1.7, h: 0.7, d: 2.5 },
-        { w: 1.9, h: 0.8, d: 3.0 },
-        { w: 1.6, h: 0.7, d: 2.8 },
-      ]
-      const size = sizeVariants[Math.floor(Math.random() * sizeVariants.length)]
+      for (let j = 0; j < carsInLane; j++) {
+        const sizeVariants = [
+          { w: 1.6, h: 0.6, d: 2.2 },
+          { w: 1.7, h: 0.7, d: 2.5 },
+          { w: 1.9, h: 0.8, d: 3.0 },
+          { w: 1.6, h: 0.7, d: 2.8 },
+        ]
+        const size = sizeVariants[Math.floor(Math.random() * sizeVariants.length)]
 
-      // 🎯 فقط 1 ماشین توی lane چپ/راست
-      const initialOffset = (Math.random() - 0.5) * 12 // پخش در عرض جاده
-      const speed = baseLaneSpeed * (0.8 + Math.random() * 0.4)
+        const initialOffset = -ROAD_WIDTH / 2 + j * spacing + (Math.random() - 0.5) * 4
+        const speed = baseLaneSpeed * (0.85 + Math.random() * 0.35)
 
-      result.push({
-        id: `${z}-${lane}-single-${Math.random()}`,
-        laneX: LANE_X[lane],
-        speed,
-        direction: laneDirection,
-        color: COLORS[Math.floor(Math.random() * COLORS.length)],
-        size,
-        initialOffset,
-      })
+        result.push({
+          id: `${z}-${lane}-${j}-${Math.random()}`,
+          laneX: LANE_X[lane],
+          speed,
+          direction: laneDirection,
+          color: COLORS[Math.floor(Math.random() * COLORS.length)],
+          size,
+          initialOffset,
+        })
+      }
     }
 
     return result
@@ -105,7 +109,7 @@ export default function Road({ z, difficulty, scene }) {
       </mesh>
 
       {/* خط‌چین‌ها فقط توی جاده‌های نزدیک */}
-      {!isFar && [-5, 5].map((x) => (
+      {!isFar && [-4.5, 4.5].map((x) => (
         <mesh key={x} rotation={[-Math.PI / 2, 0, 0]} position={[x, 0.02, z]}>
           <planeGeometry args={[0.2, 2]} />
           <meshBasicMaterial color="#ffffff" />

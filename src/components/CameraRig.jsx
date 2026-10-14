@@ -12,9 +12,9 @@ export default function CameraRig() {
 
     const p = player.position
 
-    // 🎥 دوربین کمی عقب‌تر و بالاتر برای دیدن عرض بیشتر
-    const baseY = 12
-    const baseZ = 13
+    // 🎥 دوربین متعادل
+    const baseY = 11.5
+    const baseZ = 12
 
     const desiredX = p.x * 0.2
     const desiredY = baseY
@@ -24,7 +24,7 @@ export default function CameraRig() {
     camera.position.y += (desiredY - camera.position.y) * delta * 3
     camera.position.z += (desiredZ - camera.position.z) * delta * 3
 
-    target.current.set(p.x * 0.4, 0.5, p.z - 5)
+    target.current.set(p.x * 0.4, 0.5, p.z - 4.5)
     camera.lookAt(target.current)
   })
 
