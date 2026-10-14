@@ -18,7 +18,7 @@ export default function Road({ z, difficulty, scene }) {
       result.push({
         id: `${z}-far-${Math.random()}`,
         laneX: LANE_X[1],
-        speed: 3.5 + Math.random() * 2,
+        speed: 3.5 + Math.random() * 2 + difficulty * 0.3,
         direction: Math.random() > 0.5 ? 1 : -1,
         color: COLORS[Math.floor(Math.random() * COLORS.length)],
         size: { w: 1.7, h: 0.7, d: 2.5 },
@@ -29,24 +29,20 @@ export default function Road({ z, difficulty, scene }) {
 
     const isTwoWay = Math.random() > 0.5
 
-    // 🎯 lane وسط: همیشه 1 ماشین (تضمینی)
+    // lane وسط: تضمینی 1 ماشین
     result.push({
       id: `${z}-center-${Math.random()}`,
       laneX: LANE_X[1],
-      speed: 4 + Math.random() * 2.5,
+      speed: 4 + Math.random() * 2.5 + difficulty * 0.4,
       direction: Math.random() > 0.5 ? 1 : -1,
       color: COLORS[Math.floor(Math.random() * COLORS.length)],
       size: { w: 1.7, h: 0.7, d: 2.5 },
       initialOffset: (Math.random() - 0.5) * 5,
     })
 
-    // 🎯 lane چپ و راست: هرکدوم 1 ماشین
-    // (70% احتمال که هر lane پر باشه، نه همیشه)
+    // lane چپ و راست: هرکدوم 1 ماشین
     for (let lane = 0; lane < 3; lane++) {
       if (lane === 1) continue
-
-      const shouldFill = Math.random() < 0.95  // 70% احتمال
-      if (!shouldFill) continue
 
       const laneDirection = isTwoWay
         ? (Math.random() > 0.5 ? 1 : -1)
@@ -65,7 +61,7 @@ export default function Road({ z, difficulty, scene }) {
       result.push({
         id: `${z}-${lane}-${Math.random()}`,
         laneX: LANE_X[lane],
-        speed: 4 + Math.random() * 2.5,
+        speed: 4 + Math.random() * 2.5 + difficulty * 0.4,
         direction: laneDirection,
         color: COLORS[Math.floor(Math.random() * COLORS.length)],
         size,
