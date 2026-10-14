@@ -26,7 +26,6 @@ export default function TouchControls() {
     window.dispatchEvent(event)
   }
 
-  // Swipe detection
   useEffect(() => {
     if (gameState !== 'playing') return
     if (!isMobile) return
@@ -77,46 +76,36 @@ export default function TouchControls() {
   if (!isMobile || gameState !== 'playing') return null
 
   return (
-    <>
-      {/* 🎯 راهنمای آیکون‌ها - بالای صفحه */}
-      <div className="touch-hint">
-        <div className="hint-btn hint-left">◀</div>
-        <div className="hint-btn hint-up">▲</div>
-        <div className="hint-btn hint-right">▶</div>
-      </div>
+    <div className="touch-controls">
+      <button
+        className="touch-btn touch-left"
+        onTouchStart={(e) => {
+          e.preventDefault()
+          simulateKey('ArrowLeft')
+        }}
+      >
+        ◀
+      </button>
 
-      {/* دکمه‌های پایین - برای راحتی */}
-      <div className="touch-controls">
-        <button
-          className="touch-btn touch-left"
-          onTouchStart={(e) => {
-            e.preventDefault()
-            simulateKey('ArrowLeft')
-          }}
-        >
-          ◀
-        </button>
+      <button
+        className="touch-btn touch-up"
+        onTouchStart={(e) => {
+          e.preventDefault()
+          simulateKey('Space')
+        }}
+      >
+        ▲
+      </button>
 
-        <button
-          className="touch-btn touch-up"
-          onTouchStart={(e) => {
-            e.preventDefault()
-            simulateKey('Space')
-          }}
-        >
-          ▲
-        </button>
-
-        <button
-          className="touch-btn touch-right"
-          onTouchStart={(e) => {
-            e.preventDefault()
-            simulateKey('ArrowRight')
-          }}
-        >
-          ▶
-        </button>
-      </div>
-    </>
+      <button
+        className="touch-btn touch-right"
+        onTouchStart={(e) => {
+          e.preventDefault()
+          simulateKey('ArrowRight')
+        }}
+      >
+        ▶
+      </button>
+    </div>
   )
 }
