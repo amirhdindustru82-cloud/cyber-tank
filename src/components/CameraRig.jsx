@@ -14,21 +14,24 @@ export default function CameraRig() {
 
     const p = player.position
 
-    // 🎥 دوربین نزدیک‌تر (چون جاده باریکه)
-    const baseY = 9
-    const baseZ = 10
+    // 🎥 دوربین بالاتر و عقب‌تر = دید بهتر
+    const baseY = 13
+    const baseZ = 13
 
+    // 🎬 هر 40 متر، دوربین کمی عقب‌تر
     const zoomOut = Math.min(score / 40, 3)
 
     const desiredX = p.x * 0.4
     const desiredY = baseY + zoomOut
     const desiredZ = p.z + baseZ + zoomOut
 
+    // حرکت نرم
     camera.position.x += (desiredX - camera.position.x) * delta * 4
     camera.position.y += (desiredY - camera.position.y) * delta * 4
     camera.position.z += (desiredZ - camera.position.z) * delta * 4
 
-    target.current.set(p.x * 0.6, 0.5, p.z - 5)
+    // 🎯 نگاه به جلوتر (نه دقیقاً روی بازیکن)
+    target.current.set(p.x * 0.6, 0.5, p.z - 6)
     camera.lookAt(target.current)
   })
 

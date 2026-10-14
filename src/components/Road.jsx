@@ -8,53 +8,51 @@ export default function Road({ z, difficulty, scene }) {
   const cars = useMemo(() => {
     const result = []
 
-    // جاده اول امن (زیر مرغ)
+    // جاده اول امن
     if (Math.abs(z + 2.5) < 0.5) return []
 
-    // 🎯 جاده دوم نیمه‌امن
+    // جاده دوم نیمه‌امن
     if (Math.abs(z + 5) < 0.5) {
       result.push({
         id: `${z}-safe-${Math.random()}`,
         laneX: LANE_X[2],
-        speed: 4 + Math.random() * 2,
+        speed: 5 + Math.random() * 3,
         direction: -1,
         color: COLORS[Math.floor(Math.random() * COLORS.length)],
         size: { w: 1.7, h: 0.7, d: 2.5 },
-        initialOffset: 5,
+        initialOffset: 4,
       })
       return result
     }
 
     const isTwoWay = Math.random() > 0.5
 
-    // 🔥 مرحله 1: یه ماشین تضمینی توی lane وسط (جلوی بازیکن)
-    // این ماشین همیشه هست، بدون استثنا
+    // 🔥 ماشین تضمینی توی lane وسط
     const centerSize = { w: 1.7, h: 0.7, d: 2.5 }
     result.push({
       id: `${z}-center-${Math.random()}`,
-      laneX: LANE_X[1], // lane وسط
-      speed: 3.5 + Math.random() * 2 + difficulty * 0.3,
+      laneX: LANE_X[1],
+      speed: 5 + Math.random() * 3 + difficulty * 0.5,
       direction: Math.random() > 0.5 ? 1 : -1,
       color: COLORS[Math.floor(Math.random() * COLORS.length)],
       size: centerSize,
-      initialOffset: (Math.random() - 0.5) * 6, // -3 تا 3 (وسط جاده)
+      initialOffset: (Math.random() - 0.5) * 5,
     })
 
-    // 🔥 مرحله 2: ماشین‌های lane های چپ و راست
+    // 🔥 ماشین‌های lane های چپ و راست — بیشتر
     for (let lane = 0; lane < 3; lane++) {
-      // lane وسط قبلاً ماشین داشت، فقط 1-2 ماشین اضافه
-      const carsInLane = lane === 1 ? 2 : 3
-      
+      const carsInLane = lane === 1 ? 2 : 3  // lane چپ/راست 3 ماشین
+
       const laneDirection = isTwoWay
         ? (Math.random() > 0.5 ? 1 : -1)
         : Math.random() > 0.5
           ? 1
           : -1
 
-      const baseLaneSpeed = 3 + Math.random() * 3 + difficulty * 0.4
+      // 🚀 سرعت بیشتر
+      const baseLaneSpeed = 5 + Math.random() * 4 + difficulty * 0.6
       const spacing = ROAD_WIDTH / carsInLane
 
-      // 🎯 اگه lane وسطی، از j=1 شروع کن (چون j=0 رو اضافه کردیم)
       const startJ = lane === 1 ? 1 : 0
 
       for (let j = startJ; j < carsInLane; j++) {
@@ -67,7 +65,7 @@ export default function Road({ z, difficulty, scene }) {
         const size = sizeVariants[Math.floor(Math.random() * sizeVariants.length)]
 
         const initialOffset = -ROAD_WIDTH / 2 + j * spacing
-        const speed = baseLaneSpeed * (0.8 + Math.random() * 0.5)
+        const speed = baseLaneSpeed * (0.85 + Math.random() * 0.4)
 
         result.push({
           id: `${z}-${lane}-${j}-${Math.random()}`,
@@ -97,7 +95,7 @@ export default function Road({ z, difficulty, scene }) {
         />
       </mesh>
 
-      {[-4.8, 4.8].map((x) => (
+      {[-3.8, 3.8].map((x) => (
         <mesh key={x} rotation={[-Math.PI / 2, 0, 0]} position={[x, 0.02, z]}>
           <planeGeometry args={[0.2, 1.6]} />
           <meshBasicMaterial color="#ffffff" />
