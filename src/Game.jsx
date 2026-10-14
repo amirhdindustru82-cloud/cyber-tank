@@ -2,9 +2,8 @@ import { Canvas } from '@react-three/fiber'
 import {
   EffectComposer,
   Bloom,
-  Vignette,
 } from '@react-three/postprocessing'
-import { Suspense } from 'react'
+import { Suspense, useState, useEffect } from 'react'
 import { useGame } from './store/gameStore'
 
 import Chicken from './components/Chicken'
@@ -20,27 +19,43 @@ import './styles/ui.css'
 
 export default function Game() {
   const gameState = useGame((s) => s.gameState)
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const check = () => {
+      const isTouch =
+        'ontouchstart' in window || navigator.maxTouchPoints > 0
+      setIsMobile(isTouch || window.innerWidth < 900)
+    }
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
 
   return (
     <div className="game-root">
       <Canvas
-        shadows
+        // 🚀 موبایل: بدون shadow، بدون antialias
+        shadows={!isMobile}
         camera={{ position: [0, 11, 11], fov: 55 }}
-        gl={{ antialias: true }}
-        dpr={[1, 2]}
+        gl={{
+          antialias: !isMobile,
+          powerPreference: 'high-performance',
+        }}
+        // 🚀 موبایل: dpr = 1 (خیلی سبک‌تر)
+        dpr={isMobile ? 1 : [1, 1.5]}
       >
         <color attach="background" args={['#0a0515']} />
         <fog attach="fog" args={['#0a0515', 25, 70]} />
 
-        <ambientLight intensity={0.5} />
+        <ambientLight intensity={0.6} />
         <directionalLight
           position={[10, 20, 10]}
           intensity={1}
-          castShadow
-          shadow-mapSize={[2048, 2048]}
+          castShadow={!isMobile}
         />
-        <pointLight position={[-15, 10, -10]} intensity={2} color="#ff00ea" />
-        <pointLight position={[15, 10, 10]} intensity={2} color="#00fff7" />
+        <pointLight position={[-15, 10, -10]} intensity={1.5} color="#ff00ea" />
+        <pointLight position={[15, 10, 10]} intensity={1.5} color="#00fff7" />
 
         <Suspense fallback={null}>
           <CityBg />
@@ -54,15 +69,17 @@ export default function Game() {
           )}
         </Suspense>
 
-        <EffectComposer multisampling={4}>
-          <Bloom
-            intensity={1.2}
-            luminanceThreshold={0.2}
-            luminanceSmoothing={0.9}
-            mipmapBlur
-          />
-          <Vignette eskil={false} offset={0.25} darkness={0.85} />
-        </EffectComposer>
+        {/* 🚀 موبایل: EffectComposer ساده‌تر */}
+        {!isMobile ? (
+          <EffectComposer multisampling={2}>
+            <Bloom
+              intensity={1.2}
+              luminanceThreshold={0.2}
+              luminanceSmoothing={0.9}
+              mipmapBlur
+            />
+          </EffectComposer>
+        ) : null}
       </Canvas>
 
       <TouchControls />

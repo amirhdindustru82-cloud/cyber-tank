@@ -18,17 +18,21 @@ export default function EnemyCar({
   const gameOver = useGame((s) => s.gameOver)
   const gameState = useGame((s) => s.gameState)
   const framesAlive = useRef(0)
+  const hasHitRef = useRef(false)  // 🚀 فقط یه بار بازی رو ببند
 
   const startX = initialOffset
 
   useFrame((_, delta) => {
     if (!group.current) return
     if (gameState !== 'playing') return
+    if (hasHitRef.current) return
 
     framesAlive.current++
-    group.current.position.x += speed * direction * delta
 
-    // 🎯 محدوده دقیق‌تر: کمی بزرگ‌تر از نصف جاده
+    // 🚀 سرعت رو با limit ببر جلو
+    const move = speed * direction * delta
+    group.current.position.x += move
+
     const limit = ROAD_WIDTH / 2 + 2
     if (group.current.position.x > limit) {
       group.current.position.x = -limit
@@ -56,52 +60,36 @@ export default function EnemyCar({
       dz < halfD + playerHalfD &&
       p.y < 0.9
     ) {
+      hasHitRef.current = true
       gameOver()
     }
   })
 
   return (
     <group ref={group} position={[startX, 0.5, z]}>
-      <mesh castShadow>
+      {/* 🚀 بدن: بدون edges و بدون pointLight — خیلی سبک‌تر */}
+      <mesh>
         <boxGeometry args={[size.w, size.h, size.d]} />
-        <meshStandardMaterial
-          color="#0a0018"
-          metalness={0.9}
-          roughness={0.15}
-          emissive={color}
-          emissiveIntensity={0.6}
-        />
-      </mesh>
-
-      <lineSegments>
-        <edgesGeometry
-          args={[new THREE.BoxGeometry(size.w, size.h, size.d)]}
-        />
-        <lineBasicMaterial color={color} />
-      </lineSegments>
-
-      <mesh position={[0, size.h * 0.6, -size.d * 0.1]}>
-        <boxGeometry args={[size.w * 0.75, size.h * 0.8, size.d * 0.5]} />
         <meshStandardMaterial
           color={color}
           emissive={color}
-          emissiveIntensity={1.5}
-          transparent
-          opacity={0.7}
+          emissiveIntensity={0.7}
+          metalness={0.5}
+          roughness={0.4}
         />
       </mesh>
 
-      <mesh position={[0, 0, -size.d / 2 - 0.02]}>
-        <boxGeometry args={[size.w * 0.7, 0.1, 0.05]} />
-        <meshBasicMaterial color="#00fff7" />
+      {/* کابین */}
+      <mesh position={[0, size.h * 0.6, -size.d * 0.1]}>
+        <boxGeometry args={[size.w * 0.7, size.h * 0.7, size.d * 0.5]} />
+        <meshStandardMaterial
+          color={color}
+          emissive={color}
+          emissiveIntensity={1.2}
+          transparent
+          opacity={0.8}
+        />
       </mesh>
-
-      <mesh position={[0, 0, size.d / 2 + 0.02]}>
-        <boxGeometry args={[size.w * 0.7, 0.1, 0.05]} />
-        <meshBasicMaterial color="#ff0000" />
-      </mesh>
-
-      <pointLight color={color} intensity={2} distance={5} />
     </group>
   )
 }

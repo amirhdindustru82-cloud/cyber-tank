@@ -11,16 +11,17 @@ export default function Spawner() {
 
   const [roads, setRoads] = useState([])
   const lastIndexRef = useRef(0)
+  // 🚀 کش برای جاده‌های ثابت
+  const seenIndicesRef = useRef(new Set())
 
-  // 🎯 راه‌اندازی اولیه: فقط یه بار وقتی بازی شروع می‌شه
   useEffect(() => {
     if (gameState !== 'playing') {
       setRoads([])
       lastIndexRef.current = 0
+      seenIndicesRef.current = new Set()
       return
     }
 
-    // ساخت جاده‌های اولیه
     const initial = []
     for (let i = 0; i < VISIBLE_ROADS; i++) {
       initial.push({
@@ -28,31 +29,27 @@ export default function Spawner() {
         index: i,
         z: -(i + 1) * ROAD_DEPTH,
       })
+      seenIndicesRef.current.add(i)
     }
     setRoads(initial)
     lastIndexRef.current = VISIBLE_ROADS - 1
   }, [gameState])
 
-  // 🎯 ساخت جاده جدید + حذف قدیمی‌ها
   useEffect(() => {
     if (gameState !== 'playing') return
     if (roads.length === 0) return
 
+    // 🚀 اگه score عوض نشده (چون strict mode دو بار رندر می‌کنه) skip کن
+    const minIndex = score - 3
+
     setRoads((prev) => {
-      // 🚨 محدودیت سخت: هیچوقت بیشتر از VISIBLE_ROADS + 3 جاده نداشته باش
       if (prev.length > VISIBLE_ROADS + 3) {
-        // فقط 3 جاده اول که از دورن حفظ کن
         const sorted = [...prev].sort((a, b) => a.index - b.index)
         return sorted.slice(0, VISIBLE_ROADS)
       }
 
-      // 🎯 فقط جاده‌های جلوتر از بازیکن رو نگه دار
-      // اگه بازیکن 5 جاده جلو رفته، جاده‌های قدیمی‌تر حذف می‌شن
-      const minIndex = score - 3
-
       const filtered = prev.filter((r) => r.index >= minIndex)
 
-      // اگه تعداد کمتر از VISIBLE_ROADS شد، جاده جدید بساز
       if (filtered.length < VISIBLE_ROADS) {
         const newRoads = []
         const need = VISIBLE_ROADS - filtered.length
