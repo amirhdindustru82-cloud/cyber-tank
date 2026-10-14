@@ -43,7 +43,8 @@ export default function Spawner() {
     playerProgressRef.current = targetIndex
 
     setRoads((prev) => {
-      const filtered = prev.filter((r) => r.index > targetIndex - 3)
+      // 🎯 جاده‌های بیشتر نگه دار (برای دید بازتر)
+      const filtered = prev.filter((r) => r.index > targetIndex - 5)
 
       const newRoads = []
       const need = VISIBLE_ROADS - filtered.length
